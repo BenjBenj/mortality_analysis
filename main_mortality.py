@@ -42,37 +42,43 @@ mortality_t, mortality_s = mt.mortality_function()
 start_fit = mt.time_index(t_clean, start_fit_time)
 end_fit = mt.time_index(t_clean, end_fit_time)
 
-#popt_weibull_mort, pcov_weibull_mort = curve_fit(mt.weibull_mortality, mortality_t[start_fit:end_fit], mortality_s[start_fit:end_fit], p0=[k0, lambda_0])
-#popt_gompertz_mort, pcov_gompertz_mort = curve_fit(mt.gompertz_mortality, mortality_t[start_fit:end_fit], mortality_s[start_fit:end_fit], p0=[a0, b0])
+popt_weibull_mort, pcov_weibull_mort = curve_fit(mt.weibull_mortality, mortality_t[start_fit:end_fit], mortality_s[start_fit:end_fit], \
+p0=[k0, lambda_0])
+popt_gompertz_mort, pcov_gompertz_mort = curve_fit(mt.gompertz_mortality, mortality_t[start_fit:end_fit], mortality_s[start_fit:end_fit], \
+p0=[a0, b0])
 
-###popt_weibull, pcov_weibull = curve_fit(mt.weibull, t_clean[start_fit:end_fit], s_clean[start_fit:end_fit], p0=[k0, lambda_0])
-###popt_gompertz, pcov_gompertz = curve_fit(mt.gompertz, t_clean[start_fit:end_fit], s_clean[start_fit:end_fit], p0=[a0, b0])
+popt_weibull, pcov_weibull = curve_fit(mt.weibull, t_clean[start_fit:end_fit], s_clean[start_fit:end_fit], p0=[k0, lambda_0])
+popt_gompertz, pcov_gompertz = curve_fit(mt.gompertz, t_clean[start_fit:end_fit], s_clean[start_fit:end_fit], p0=[a0, b0])
 
 # Displaying of Weibull/Gompertz parameters
-###print('Weibull: k = %s, lambda = %s' % (popt_weibull[0], popt_weibull[1]))
-###print('Gompertz: a = %s, b = %s' %(popt_gompertz[0], popt_gompertz[1]))
+print('Weibull: k = %s, lambda = %s' % (popt_weibull[0], popt_weibull[1]))
+print('Gompertz: a = %s, b = %s' %(popt_gompertz[0], popt_gompertz[1]))
 
 # Plotting section
 plt.figure(0)
 plt.semilogy(t, s_scaled, 'ro', ms=1)
 plt.plot(t_clean, s_clean, 'r-')
 plt.plot(mortality_t, mortality_s, 'b*')
-###plt.plot(np.arange(int(start_fit_time), int(end_fit_time), 0.01), mt.weibull_mortality(np.arange(int(start_fit_time), int(end_fit_time), 0.01), popt_weibull[0], popt_weibull[1]), 'b--')
-###plt.plot(np.arange(int(start_fit_time), int(end_fit_time), 0.01), mt.gompertz_mortality(np.arange(int(start_fit_time), int(end_fit_time), 0.01), popt_gompertz[0], popt_gompertz[1]), 'b-.')
+plt.plot(np.arange(int(start_fit_time), int(end_fit_time), 0.01), mt.weibull_mortality(np.arange(int(start_fit_time), int(end_fit_time), 0.01), \
+popt_weibull_mort[0], popt_weibull_mort[1]), 'b--')
+plt.plot(np.arange(int(start_fit_time), int(end_fit_time), 0.01), mt.gompertz_mortality(np.arange(int(start_fit_time), int(end_fit_time), 0.01), \
+popt_gompertz_mort[0], popt_gompertz_mort[1]), 'b-.')
 plt.title('Film Mortality')
 plt.xlabel(unit_time)
 plt.xlim([0, t[-1]])
 plt.ylim([0.0001, 1])
-legend = ['Survival function', 'Clean data', 'Mortality function', 'Weibull fit', 'Gompertz fit']
+legend = ['Raw S(t) [unitless]', 'Clean S(t) [unitless]', '$\mu{}(t)$ [$t^{-1}$]', 'Weibull fit [$t^{-1}$]', 'Gompertz fit [$t^{-1}$]']
 plt.legend(legend, loc=3)
 
 plt.figure(1)
 plt.semilogy(t, s_scaled, 'ro', ms=1)
-###plt.plot(np.arange(int(start_fit_time), int(end_fit_time), 0.01), mt.weibull(np.arange(int(start_fit_time), int(end_fit_time), 0.01), popt_weibull[0], popt_weibull[1]), 'r--')
-###plt.plot(np.arange(int(start_fit_time), int(end_fit_time), 0.01), mt.gompertz(np.arange(int(start_fit_time), int(end_fit_time), 0.01), popt_gompertz[0], popt_gompertz[1]), 'r-.')
+plt.plot(np.arange(int(start_fit_time), int(end_fit_time), 0.01), mt.weibull(np.arange(int(start_fit_time), int(end_fit_time), 0.01), \
+popt_weibull[0], popt_weibull[1]), 'r--')
+plt.plot(np.arange(int(start_fit_time), int(end_fit_time), 0.01), mt.gompertz(np.arange(int(start_fit_time), int(end_fit_time), 0.01), \
+popt_gompertz[0], popt_gompertz[1]), 'r-.')
 plt.title('Survival Function')
 plt.xlabel(unit_time)
-legend = ['Survival function', 'Weibull fit', 'Gompertz fit']
+legend = ['Raw S(t) [unitless]', 'Weibull fit [unitless]', 'Gompertz fit [unitless]']
 plt.xlim([0, t[-1]])
 plt.ylim([0, 1])
 plt.legend(legend, loc=3)
