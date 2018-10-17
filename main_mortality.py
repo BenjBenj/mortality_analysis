@@ -51,6 +51,7 @@ popt_weibull, pcov_weibull = curve_fit(mt.weibull, t_clean[start_fit:end_fit], s
 popt_gompertz, pcov_gompertz = curve_fit(mt.gompertz, t_clean[start_fit:end_fit], s_clean[start_fit:end_fit], p0=[a0, b0])
 
 # Displaying of Weibull/Gompertz parameters
+print('Regression coefficients:\n------------------------')
 print('Weibull: k = %s, lambda = %s' % (popt_weibull[0], popt_weibull[1]))
 print('Gompertz: a = %s, b = %s' %(popt_gompertz[0], popt_gompertz[1]))
 
@@ -66,9 +67,9 @@ popt_gompertz_mort[0], popt_gompertz_mort[1]), 'b-.')
 plt.title('Film Mortality')
 plt.xlabel(unit_time)
 plt.xlim([0, t[-1]])
-plt.ylim([0.0001, 1])
+plt.ylim([1/s[0], 1])
 legend = ['Raw S(t) [unitless]', 'Clean S(t) [unitless]', '$\mu{}(t)$ [$t^{-1}$]', 'Weibull fit [$t^{-1}$]', 'Gompertz fit [$t^{-1}$]']
-plt.legend(legend, loc=3)
+plt.legend(legend, loc='best')
 
 plt.figure(1)
 plt.semilogy(t, s_scaled, 'ro', ms=1)
@@ -80,7 +81,7 @@ plt.title('Survival Function')
 plt.xlabel(unit_time)
 legend = ['Raw S(t) [unitless]', 'Weibull fit [unitless]', 'Gompertz fit [unitless]']
 plt.xlim([0, t[-1]])
-plt.ylim([0, 1])
-plt.legend(legend, loc=3)
+plt.ylim([1/s[0], 1])
+plt.legend(legend, loc='best')
 
 plt.show()

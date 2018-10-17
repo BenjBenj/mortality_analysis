@@ -41,13 +41,29 @@ class mortality:
 		-----
 		Output: derivative_x (numpy array), derivative_y (numpy array).
 		-----
-		Comment: Works out the derivative dx/dy.
+		Comment: Works out the derivative dx/dy using the straightforward method.
 		-----
 		"""
 		derivative_x = x[:-1]
 		derivative_y = []
 		for i in range(len(x)-1):
 			derivative_y.append((y[i+1]-y[i])/(x[i+1]-x[i]))
+		return derivative_x, derivative_y
+
+
+	def derivative_central_difference_method(self, x, y):
+		"""
+		Input: x (numpy array), y (numpy array).
+		-----
+		Output: derivative_x (numpy array), derivative_y (numpy array).
+		-----
+		Comment: Works out the derivative dx/dy using the central difference method.
+		-----
+		"""
+		derivative_x = x[1:-1]
+		derivative_y = []
+		for i in range(len(x)-2):
+			derivative_y.append((y[i+2]-y[i])/(x[i+2]-x[i]))
 		return derivative_x, derivative_y
 
 
@@ -96,8 +112,6 @@ class mortality:
 		t_bin, s_bin = self.new_bin(self.t, s_scaled, self.b)
 		t_clean = self.moving_average(t_bin, self.m)
 		s_clean = self.moving_average(s_bin, self.m)
-		t_clean = np.insert(t_clean, 0, self.t[0])
-		s_clean = np.insert(s_clean, 0, 1)
 		return t_clean, s_clean
 
 
@@ -112,9 +126,9 @@ class mortality:
 		-----
 		"""
 		t_clean, s_clean = self.cleaning()
-		mortality_t, mortality_s = self.derivative(t_clean, -np.log(s_clean))
-		#mortality_t[0] = self.t[0]
-		#mortality_s[0] = np.log((self.s[0]-self.s[1]) / (self.t[1]-self.t[0]))
+		mortality_t, mortality_s = self.derivative_central_difference_method(t_clean, -np.log(s_clean))
+		#mortality_t = np.insert(mortality_t, 0, 0)
+		#mortality_s = np.insert(mortality_s, 0, (np.log(s_clean[0]) - np.log(s_clean[1])) / (t_clean[1]-t_clean[0]))
 		return mortality_t, mortality_s
 
 
